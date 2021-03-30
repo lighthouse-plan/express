@@ -1,0 +1,113 @@
+{% load static %}
+<div class=" row justify-content-center" style="margin-top: 50px;">
+    <div class="col-11">
+        <div class="accordion" id="accordionExample">
+            <div class="card">
+                <div class="card-header py-4" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-center" type="button" data-toggle="collapse"
+                            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <span class="font-ch text-info h2">我要寄件</span>
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="font-ch text-danger mb-4">
+                            如果送件选择邮寄到物流店，需要在包裹上注明国内收件人姓名，如果没有注明我司将选择滞后处理。
+                        </div>
+                        <form action="#" method="post">
+                            {% csrf_token %}
+                            {% for field in form1 %}
+                            {% if field.label == '收件人国家' %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
+                                    class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
+                                    readonly="true">
+                            </div>
+                            {% elif field.label == '收件人省' %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}"
+                                    class="form-control " onchange="showCity(this)">
+                                    <option>--请选择{{ field.label }}--</option>
+                                </select>
+                            </div>
+                            {% elif field.label == '收件人市' %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}"
+                                    class="form-control " onchange="showCountry(this)">
+                                    <option>--请选择{{ field.label }}--</option>
+                                </select>
+                            </div>
+                            {% elif field.label == '收件人区（县）' %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}"
+                                    class="form-control " >
+                                    <option>--请选择{{ field.label }}--</option>
+                                </select>
+                            </div>
+                            {% else %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
+                                    class="form-control" name="{{ field.html_name }}"
+                                    placeholder="请输入{{ field.label }}">
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            <div class="font-ch text-danger mb-4">
+                                建议上传身份证照片,如遇海关抽查不能及时提交身份证照片出现任何问题我司概不负责
+                            </div>
+                            <button type="submit" class="btn btn-info">提交</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-center collapsed py-4" type="button"
+                            data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                            aria-controls="collapseTwo">
+                            <span class="font-ch text-info h2">我要查件</span>
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="font-ch my-3 text-primary">
+                            查询步骤1：输入收件人手机号码，查看并复制快递单号
+                        </div>
+                        <form action="{% url path %}" method="post">
+                            {% csrf_token %}
+                            {% for field in form2 %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
+                                    class="form-control" name="{{ field.html_name }}"
+                                    placeholder="请输入{{ field.label }}">
+                            </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-info">搜索单号</button>
+                        </form>
+                        <div class="font-ch mt-5 mb-3 text-primary">
+                            查询步骤2：点击快递查询入口，输入快递单号进行查询
+                        </div>
+                        <a href="https://www.kuaidi100.com/"><button class="btn btn-primary">快递查询入口</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
