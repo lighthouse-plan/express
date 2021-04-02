@@ -6,16 +6,16 @@ class Express(models.Model):
         verbose_name = '快递订单'
         verbose_name_plural = "快递订单"
     #寄件人姓名：选填    
-    sender_name = models.CharField(max_length=200, null=True, verbose_name="寄件人姓名", blank=True)
-    #寄件日期时间
-    created_date = models.DateTimeField(auto_now_add=True, verbose_name="寄件日期时间")
+    sender_name = models.CharField(max_length=200, null=True, verbose_name="寄件人姓名(选填)", blank=True)
+    #寄件登录日期时间
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="寄件登录时间")
     #寄件人微信名字：选填
-    sender_wechat_name = models.CharField(max_length=200, null=True, verbose_name="寄件人微信名字", blank=True)
+    sender_wechat_name = models.CharField(max_length=200, null=True, verbose_name="寄件人微信名字(选填)", blank=True)
     #寄件人微信号：（必须填写）
-    sender_wechat_num = models.CharField(max_length=200, verbose_name="寄件人微信号(必填)", default='0')
+    sender_wechat_num = models.CharField(max_length=200, verbose_name="寄件人微信号", default='0')
     #寄件人手机号码：选填
     mobile_regex = RegexValidator(regex=r'(^0[789]0[0-9]{4}[0-9]{4}$)|^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9]{3})[0-9]{8}$', message="请输入日本或中国手机号码(不加-)")
-    sender_mobile_num = models.CharField(validators=[mobile_regex], null=True, max_length=17, verbose_name="寄件人手机号码", blank=True)
+    sender_mobile_num = models.CharField(validators=[mobile_regex], max_length=17, verbose_name="寄件人手机号码", default='0')
     #寄件店铺
     shop = models.CharField(max_length=200, null=True, verbose_name="寄件店铺")
 
@@ -41,8 +41,10 @@ class Express(models.Model):
     recipient_photo = models.ImageField(verbose_name="收件人身份证照片上传", blank=True) 
 
     # 快递单号
-    track_number = models.CharField(max_length=200, verbose_name="快递单号", default='xxx', blank=True)
+    track_number = models.CharField(max_length=200, verbose_name="快递单号", null=True, blank=True)
+    # 包裹状态
+    packet_state = models.CharField(max_length=20, verbose_name="包裹状态", default='未发送', blank=True)
 
     def __str__(self):
-        return self.sender_wechat_num + '-----' + str.split(str(self.created_date), '.')[0]+ '-----' + self.track_number
+        return self.sender_wechat_num + '-----' + str.split(str(self.created_date), '.')[0]+ '-----' + str(self.track_number)
 
