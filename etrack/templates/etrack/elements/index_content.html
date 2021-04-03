@@ -13,14 +13,22 @@
                 </div>
 
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                    <div class="card-body">
+                    <div id='cardOne' class="card-body">
                         <div class="font-ch text-danger mb-4">
                             如果送件选择邮寄到物流店，需要在包裹上注明国内收件人姓名，如果没有注明我司将选择滞后处理。
                         </div>
-                        <form action="#" method="post">
+                        <form id='formOne' action="{% url 'etrack:index_ike' %}" method="post">
                             {% csrf_token %}
                             {% for field in form1 %}
                             {% if field.label == '收件人国家' %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
+                                    class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
+                                    readonly="true">
+                            </div>
+                            {% elif field.label == '寄件店铺' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
@@ -68,11 +76,32 @@
                             <div class="font-ch text-danger mb-4">
                                 建议上传身份证照片,如遇海关抽查不能及时提交身份证照片出现任何问题我司概不负责
                             </div>
-                            <button type="submit" class="btn btn-info">提交</button>
+                            <button id='submitBtn' type="submit" class="btn btn-primary" style="visibility: hidden;">提交</button>
                         </form>
+                        <button id='ensureBtn' class="btn btn-info" onclick="ensure()">确认</button>
+                        <br><button id='backBtn' class="btn btn-danger" onclick="back()" style="visibility: hidden;">修改</button>
                     </div>
                 </div>
             </div>
+            <script>
+                function ensure(){
+                    alert("请再次确认填写信息无误，然后点击提交")
+                    document.getElementById('ensureBtn').style.visibility = 'hidden';
+                    document.getElementById('submitBtn').style.visibility = 'visible';
+                    document.getElementById('backBtn').style.visibility = 'visible';
+                    document.getElementById('collapseOne').classList.add('show');
+                    $('#formOne  input').attr('readonly','readonly');
+                    $('#formOne  select').attr('readonly','readonly');
+                }
+                function back(){
+                    document.getElementById('ensureBtn').style.visibility = 'visible';
+                    document.getElementById('submitBtn').style.visibility = 'hidden';
+                    document.getElementById('backBtn').style.visibility = 'hidden';
+                    document.getElementById('collapseOne').classList.add('show');
+                    $('#formOne input').not('#id_recipient_country').not('#id_shop').removeAttr('readonly');
+                    $('#formOne select').removeAttr('readonly');
+                }
+            </script>
             <div class="card">
                 <div class="card-header" id="headingTwo">
                     <h2 class="mb-0">
@@ -83,24 +112,55 @@
                         </button>
                     </h2>
                 </div>
+                {% if has_result %}
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                {% else %}
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                {% endif %}
                     <div class="card-body">
                         <div class="font-ch my-3 text-primary">
                             查询步骤1：输入收件人手机号码，查看并复制快递单号
                         </div>
-                        <!-- <form action="{% url path %}" method="post">
+                        <form action="{% url path %}" method="post">
                             {% csrf_token %}
                             {% for field in form2 %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
+                                <span class="text-danger">{{ error_message }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
                                     class="form-control" name="{{ field.html_name }}"
                                     placeholder="请输入{{ field.label }}">
                             </div>
                             {% endfor %}
                             <button type="submit" class="btn btn-info">搜索单号</button>
-                        </form> -->
+                        </form>
+                        {% if has_result %}
+                        <div class="row my-3">
+                            <div class="col-10">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                          <th scope="col">#</th>
+                                          <th scope="col">快递单号</th>
+                                          <th scope="col">寄件登录时间</th>
+                                          <th scope="col">点击复制单号</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                    {% for r in result %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td id="{{ forloop.counter }}">{{ r.state }}</td>
+                                            <td>{{ r.datetime }}</td>
+                                            <td><button class="btn btn-sm btn-outline-secondary " onclick="copyText({{ forloop.counter }})" >复制</button></td>
+                                          </tr> 
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                        {% endif %}
                         <div class="font-ch mt-5 mb-3 text-primary">
                             查询步骤2：点击快递查询入口，输入快递单号进行查询
                         </div>
@@ -111,3 +171,15 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function copyText(id) {
+        var myCode = document.getElementById(id).innerText;
+        var fullLink = document.createElement('input');
+        document.body.appendChild(fullLink);
+        fullLink.value = myCode;
+        fullLink.select();
+        document.execCommand("copy", false);
+        fullLink.remove();
+        alert("已复制: " + '"' + fullLink.value + '"');
+    }
+  </script>
