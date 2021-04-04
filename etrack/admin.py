@@ -7,8 +7,6 @@ import csv
 from django.http import HttpResponse
 
 # Register your models here.
-
-
 class MyAdminSite(admin.AdminSite):
     pass
 
@@ -22,7 +20,7 @@ class ExpressAdmin(admin.ModelAdmin):
         field_names = [field.name for field in meta.fields]
         field_human_names = [field.verbose_name for field in meta.fields]
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=liebaosudi_{}.csv'.format(datetime.datetime.now().strftime('%Y%m%d'))
+        response['Content-Disposition'] = 'attachment; filename=liebaosudi_{}.csv'.format(datetime.datetime.now().strftime('%Y%m%d-%H-%M'))
         writer = csv.writer(response)
         writer.writerow(field_human_names)
         for obj in queryset:
@@ -38,17 +36,17 @@ class ExpressAdmin(admin.ModelAdmin):
     #     return actions
 
     fieldsets = [
-        ('寄件人信息', {'fields':['sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop'],}),
-        ('收件人信息', {'fields':['recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'recipient_photo']}),
+        ('代理人', {'fields':['agent_account',],}),
+        ('发件人信息', {'fields':['sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop','sender_country','sender_province','sender_city','sender_district','sender_address',],}),
+        ('收件人信息', {'fields':['auto_recipient_name', 'recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'recipient_photo']}),
         ('快递信息', {'fields':['track_number', 'packet_state']}),
     ]
-    readonly_fields = ('sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','recipient_name', 'shop', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'recipient_photo','packet_state')
+    readonly_fields = ('agent_account','sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop','sender_country','sender_province','sender_city','sender_district','sender_address','auto_recipient_name', 'recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'recipient_photo','packet_state')
     list_display = ('sender_wechat_num',  'track_number', 'created_date', 'packet_state')
     list_filter = (('created_date',DateRangeFilter),'packet_state',)
     search_fields = ['sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop','recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'track_number','packet_state']
     list_per_page = 20
     actions = [download_csv, upload_track_number]
-
 
 admin_site = MyAdminSite(name='myadmin')
 admin_site.register(Express, ExpressAdmin)

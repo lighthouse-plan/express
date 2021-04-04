@@ -11,12 +11,29 @@
                         </button>
                     </h2>
                 </div>
-
+                {% if form1.errors %}
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                {% else %}
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                {% endif %}
                     <div id='cardOne' class="card-body">
                         <div class="font-ch text-danger mb-4">
                             如果送件选择邮发到物流店，需要在包裹上注明国内收件人姓名，如果没有注明我司将选择滞后处理。
                         </div>
+                        {% if form1.errors %}
+                            {% for field in form1 %}
+                                {% for error in field.errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ field.label }}{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form1.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                         <form id='formOne' action="{% url 'etrack:index' shop  %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             {% for field in form1 %}
@@ -51,27 +68,27 @@
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
-                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value }}"
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " onchange="showCity(this)">
-                                    <option>--请选择{{ field.label }}--</option>
+                                    <option value="">--请选择{{ field.label }}--</option>
                                 </select>
                             </div>
                             {% elif field.label == '收件人市' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
-                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value }}"
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " onchange="showCountry(this)">
-                                    <option>--请选择{{ field.label }}--</option>
+                                    <option value="">--请选择{{ field.label }}--</option>
                                 </select>
                             </div>
                             {% elif field.label == '收件人区（县）' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
-                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value }}"
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " >
-                                    <option>--请选择{{ field.label }}--</option>
+                                    <option value="">--请选择{{ field.label }}--</option>
                                 </select>
                             </div>
                             {% elif field.label == '收件人身份证照片上传' %}

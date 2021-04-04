@@ -1,0 +1,19 @@
+{% extends 'etrack/elements/default.html' %}
+{% load static %}
+{% block title %} 猎豹速递{{ shop_name }}店 {% endblock %}
+{% block branch %}『{{ shop_name }}店』{% endblock %}
+{% block qrimg %}
+    {% with 'images/'|add:shop|add:'.jpg' as image_static %}
+        {% static image_static %}
+    {% endwith %}
+{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-10">
+        <h3 class='text-info font-ch'>已成功提交发件信息，感谢您的配合，欢迎再次使用我们的服务！</h3>
+    </div>
+    <div class="col-10 mt-5">
+        <a href="{% url 'etrack:index' shop=shop %}"><button class='btn btn-info font-ch' type="button">返回主页</button></a>
+    </div>
+</div>
+{% endblock %}

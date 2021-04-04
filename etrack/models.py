@@ -54,9 +54,24 @@ class Express(models.Model):
     class Meta:
         verbose_name = '快递订单'
         verbose_name_plural = "快递订单"
+    # 代理人账号：ZZagent （固定）
+    agent_account = models.CharField(max_length=200, default='ZZagent', verbose_name="代理人账号")
+    # 发件人国家： (固定)
+    sender_country = models.CharField(max_length=200, default='日本', verbose_name="发件人国家")
+    # 发件人省： (固定)
+    sender_province = models.CharField(max_length=200, default='埼玉县', verbose_name="发件人省")
+    # 发件人市： (固定)
+    sender_city = models.CharField(max_length=200, default='川口市', verbose_name="发件人市")
+    # 发件人区（县）： (固定)
+    sender_district = models.CharField(max_length=200, default='幸町', verbose_name="发件人区（县）")
+    # 发件人地址： (固定)
+    sender_address = models.CharField(max_length=200, default='〒 332-0016埼玉県川口市幸町1-14-10', verbose_name="发件人地址")
+    # 散客名称：(自动)
+    auto_recipient_name = models.CharField(max_length=200, verbose_name="散客名称", default='')
+
     #发件人姓名：选填    
     sender_name = models.CharField(max_length=200, null=True, verbose_name="发件人姓名(选填)", blank=True, default='')
-    #发件登录日期时间
+    #发件登录日期时间 (自动)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="发件登录时间")
     #发件人微信名字：选填
     sender_wechat_name = models.CharField(max_length=200, null=True, verbose_name="发件人微信名字(选填)", blank=True, default='')
@@ -68,6 +83,7 @@ class Express(models.Model):
     #发件店铺
     shop = models.CharField(max_length=200, null=True, verbose_name="发件店铺")
 
+    
     # 收件人姓名：（必须填写）
     recipient_name = models.CharField(max_length=200, verbose_name="收件人姓名", default='')
     # 收件人手机号码: （必须填写）
@@ -93,6 +109,17 @@ class Express(models.Model):
     track_number = models.CharField(max_length=200, verbose_name="快递单号", null=True, blank=True)
     # 包裹状态
     packet_state = models.CharField(max_length=20, verbose_name="包裹状态", default='未发送', blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.sender_name:
+            self.sender_name = '申通国际日本站'
+        self.auto_recipient_name = self.recipient_name
+        if self.track_number:
+            self.packet_state = '已发送'
+        if self.recipient_photo:
+            self.recipient_photo = get_thumbnail(self.recipient_photo, '500x600', quality=99, format='JPEG')
+        super(Express, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.sender_wechat_num + '-----' + str.split(str(self.created_date), '.')[0]+ '-----' + str(self.track_number)

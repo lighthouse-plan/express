@@ -2,10 +2,13 @@
 <div class="row">
     <div class="col-12" style="padding: 0;">
         <nav class="navbar " style="background-color: rgb(255, 255, 255);">
-            <a href="#" style="text-decoration: none; ">
+            <!-- {% with 'etrack:'|add:shop|add:'/index' as url %} -->
+            <a href="{% url 'etrack:index' shop=shop %}" style="text-decoration: none; ">
                 <img src="{% static 'images/logo.png' %}" width="100" height="50" alt="LOGO" loading="lazy">
                 <span class="font-ch ml-3 text-dark h3" style="position: relative; top: 10px;">猎豹速递</span>
             </a>
+            <!-- {% endwith %} -->
+            
         </nav>
     </div>
 </div>
