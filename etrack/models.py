@@ -8,6 +8,8 @@ from django.core.files import File
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from django.db import models
+from django.conf import settings
+
  
 """ Whenever ANY model is deleted, if it has a file field on it, delete the associated file too"""
 @receiver(post_delete)
@@ -49,6 +51,33 @@ def delete_file_if_unused(model,instance,field,instance_file_field):
 def user_photo_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return f"recipient_photo/{instance.created_date.strftime('%Y')}/{instance.created_date.strftime('%m')}/{instance.created_date.strftime('%d')}/{instance.recipient_name}_{instance.recipient_id}/{instance.created_date}.{str.split(str(filename), '.')[-1]}"
+
+
+def edit_photo_before_save(image):
+    photo = Image.open(image)
+    photo = photo.convert('RGBA')
+    maxsize = (512, 512)
+    photo.thumbnail(maxsize, Image.ANTIALIAS)
+    width, height = photo.size
+
+    try: 
+        txt_img = Image.new("RGBA", photo.size, (255,255,255,0))
+        draw = ImageDraw.Draw(txt_img)
+        text = "猎豹速递 猎豹速递 猎豹速递 猎豹速递 猎豹速递 猎豹速递"
+        font = ImageFont.truetype(settings.STATIC_URL+'font/Hiragino Sans GB.ttc', 80)
+        textwidth, textheight = draw.textsize(text, font)
+        x = 0
+        y = height//2 - textheight
+        draw.text((x, y), text=text, font=font, fill=(255, 255, 255, 128))
+        photo = Image.alpha_composite(photo, txt_img)
+    except:
+        pass
+
+    thumb_io = BytesIO() # create a BytesIO object
+    photo = photo.convert('RGB')
+    photo.save(thumb_io, 'JPEG', quality=85) 
+    thumbnail = File(thumb_io, name=image.name)
+    return thumbnail
 
 class Express(models.Model):
     class Meta:
@@ -116,8 +145,11 @@ class Express(models.Model):
         self.auto_recipient_name = self.recipient_name
         if self.track_number:
             self.packet_state = '已发送'
-        # if self.recipient_photo:
-        #     self.recipient_photo = get_thumbnail(self.recipient_photo, '500x600', quality=99, format='JPEG')
+        if self.recipient_photo:
+            try:
+                self.recipient_photo = edit_photo_before_save(self.recipient_photo)
+            except:
+                pass
         super(Express, self).save(*args, **kwargs)
 
 

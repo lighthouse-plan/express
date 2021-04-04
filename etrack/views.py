@@ -28,7 +28,6 @@ def index(request, shop):
             
         if form1.is_valid():
             form1.save()
-            print(form1)
             email_from = settings.EMAIL_HOST_USER
             send_mail(
                 'Subject here',
