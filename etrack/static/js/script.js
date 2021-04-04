@@ -1546,13 +1546,14 @@ function showPro() {
     for (var i = 0; i < len; i++) {
         var provOpt = document.createElement("option");
         provOpt.innerText = province[i]['name'];
-        provOpt.value = i;
+        provOpt.value = provOpt.innerText;
+        provOpt.id = i;
         id_recipient_province.appendChild(provOpt);
     }
 };
 /*根据所选的省份来显示城市列表*/
 function showCity(obj) {
-    var val = obj.options[obj.selectedIndex].value;
+    var val = obj.options[obj.selectedIndex].id;
     current_prov = val;
 
     if (val != null) {
@@ -1563,14 +1564,15 @@ function showCity(obj) {
         for (var j = 0; j < cityLen; j++) {
             var cityOpt = document.createElement('option');
             cityOpt.innerText = province[val]["city"][j].name;
-            cityOpt.value = j;
+            cityOpt.value = cityOpt.innerText;
+            cityOpt.id = j;
             id_recipient_city.appendChild(cityOpt);
         }
     }
 };
 /*根据所选的城市来显示县区列表*/
 function showCountry(obj) {
-    var val = obj.options[obj.selectedIndex].value;
+    var val = obj.options[obj.selectedIndex].id;
     current_city = val;
     if (val != null) {
         id_recipient_district.length = 1;
@@ -1584,23 +1586,12 @@ function showCountry(obj) {
         for (var n = 0; n < countryLen; n++) {
             var countryOpt = document.createElement('option');
             countryOpt.innerText = province[current_prov]["city"][val].districtAndCounty[n];
-            countryOpt.value = n;
+            countryOpt.value = countryOpt.innerText;
             id_recipient_district.appendChild(countryOpt);
         }
     }
 };
 
-function selectCountry(obj) {
-    current_country = obj.options[obj.selectedIndex].value;
-    $(".mybtn").disabled = false;
-
-};
-function showAddr() {
-    var ss = province[current_prov].name + "|" +
-        province[current_prov]['city'][current_city].name + "|" +
-        province[current_prov]['city'][current_city]['districtAndCounty'][current_country];
-    $("#addr-show").val(ss);
-}
 
 
 

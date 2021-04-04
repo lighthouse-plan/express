@@ -7,7 +7,7 @@
                     <h2 class="mb-0">
                         <button class="btn btn-link btn-block text-center" type="button" data-toggle="collapse"
                             data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <span class="font-ch text-info h2">我要寄件</span>
+                            <span class="font-ch text-info h2">我要发件</span>
                         </button>
                     </h2>
                 </div>
@@ -15,9 +15,9 @@
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                     <div id='cardOne' class="card-body">
                         <div class="font-ch text-danger mb-4">
-                            如果送件选择邮寄到物流店，需要在包裹上注明国内收件人姓名，如果没有注明我司将选择滞后处理。
+                            如果送件选择邮发到物流店，需要在包裹上注明国内收件人姓名，如果没有注明我司将选择滞后处理。
                         </div>
-                        <form id='formOne' action="{% url 'etrack:index_ike' %}" method="post">
+                        <form id='formOne' action="{% url 'etrack:index' shop  %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             {% for field in form1 %}
                             {% if field.label == '收件人国家' %}
@@ -28,19 +28,30 @@
                                     class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
                                     readonly="true">
                             </div>
-                            {% elif field.label == '寄件店铺' %}
+                            {% elif field.label == '发件店铺' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
-                                    class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
+                                    class="form-control" name="{{ field.html_name }}" value="{{ shop_name }}店"
                                     readonly="true">
                             </div>
+                            <div class="form-group mt-5">
+                                <label class="font-ch " for="autofill">收件人信息智能填写</label>
+                                <p style="color: coral;">收件人姓名，收件人手机号码，收件人详细地址，收件人身份证号码
+                                    按顺序写成一行，用逗号分割，每项信息里面不能含有逗号。地址中请注明省市区。如：
+                                    张三，13912345678，浙江省杭州市余杭区文一西路969号，10000120200101999X</p>
+                                <textarea id="autofill" type="textarea"
+                                    class="form-control" name="autofill" ></textarea>
+                                    <button id='autofillBtn' class='mt-2 btn btn-info' type="button" onclick="parse()">解析信息自动并填写收件人信息</button>
+                            </div>
+                            
+
                             {% elif field.label == '收件人省' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
-                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}"
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value }}"
                                     class="form-control " onchange="showCity(this)">
                                     <option>--请选择{{ field.label }}--</option>
                                 </select>
@@ -49,7 +60,7 @@
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
-                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}"
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value }}"
                                     class="form-control " onchange="showCountry(this)">
                                     <option>--请选择{{ field.label }}--</option>
                                 </select>
@@ -58,17 +69,25 @@
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
-                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}"
+                                <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="{{ field.value }}"
                                     class="form-control " >
                                     <option>--请选择{{ field.label }}--</option>
                                 </select>
+                            </div>
+                            {% elif field.label == '收件人身份证照片上传' %}
+                            <div class="form-group">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                <span class="text-danger">{{ field.errors }}</span>
+                                <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
+                                    class="form-control-file" name="{{ field.html_name }}" value="{{ field.value }}"
+                                    placeholder="请输入{{ field.label }}">
                             </div>
                             {% else %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
                                 <span class="text-danger">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
-                                    class="form-control" name="{{ field.html_name }}"
+                                    class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
                                     placeholder="请输入{{ field.label }}">
                             </div>
                             {% endif %}
@@ -121,7 +140,7 @@
                         <div class="font-ch my-3 text-primary">
                             查询步骤1：输入收件人手机号码，查看并复制快递单号
                         </div>
-                        <form action="{% url path %}" method="post">
+                        <form action="{% url 'etrack:search'  shop  %}" method="post">
                             {% csrf_token %}
                             {% for field in form2 %}
                             <div class="form-group">
@@ -142,7 +161,7 @@
                                         <tr>
                                           <th scope="col">#</th>
                                           <th scope="col">快递单号</th>
-                                          <th scope="col">寄件登录时间</th>
+                                          <th scope="col">发件登录时间</th>
                                           <th scope="col">点击复制单号</th>
                                         </tr>
                                       </thead>
@@ -181,5 +200,22 @@
         document.execCommand("copy", false);
         fullLink.remove();
         alert("已复制: " + '"' + fullLink.value + '"');
+    }
+
+    function parse(){
+        var target = $('#autofill').val().replaceAll('，',',');
+        var items = target.split(',');
+        try {
+            var name = items[0];
+            var phone = items[1];
+            var addr = items[2];
+            var id = items[3];
+            $('#id_recipient_name').val(name);
+            $('#id_recipient_phone_num').val(phone);
+            $('#id_recipient_addr').val(addr);
+            $('#id_recipient_id').val(id);
+        } catch (error) {
+            alert('请按照规则填写智能填写信息!')
+        }
     }
   </script>

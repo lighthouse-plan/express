@@ -13,7 +13,6 @@ class MyAdminSite(admin.AdminSite):
     pass
 
 def upload_track_number(modeladmin, request, queryset):
-    
     pass
 upload_track_number.short_description = '上传快递单号的Excel文件'
 
@@ -23,7 +22,7 @@ class ExpressAdmin(admin.ModelAdmin):
         field_names = [field.name for field in meta.fields]
         field_human_names = [field.verbose_name for field in meta.fields]
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=liebaosudi_{}.csv'.format(datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
+        response['Content-Disposition'] = 'attachment; filename=liebaosudi_{}.csv'.format(datetime.datetime.now().strftime('%Y%m%d'))
         writer = csv.writer(response)
         writer.writerow(field_human_names)
         for obj in queryset:
@@ -31,11 +30,12 @@ class ExpressAdmin(admin.ModelAdmin):
         return response
     download_csv.short_description = '下载已选中的CSV文件'
 
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
-        return actions
+    # disable delete action
+    # def get_actions(self, request):
+    #     actions = super().get_actions(request)
+    #     if 'delete_selected' in actions:
+    #         del actions['delete_selected']
+    #     return actions
 
     fieldsets = [
         ('寄件人信息', {'fields':['sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop'],}),
@@ -46,7 +46,7 @@ class ExpressAdmin(admin.ModelAdmin):
     list_display = ('sender_wechat_num',  'track_number', 'created_date', 'packet_state')
     list_filter = (('created_date',DateRangeFilter),'packet_state',)
     search_fields = ['sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop','recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'track_number','packet_state']
-    list_max_show_all = 20
+    list_per_page = 20
     actions = [download_csv, upload_track_number]
 
 
