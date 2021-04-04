@@ -57,7 +57,6 @@ def search(request, shop):
         shop_name = get_shop_name(shop)
     except:
         raise Http404(f"{shop} does not exist")
-    form1 = ExpressForm()
     has_result = False
     result = []
     error_message = ''
@@ -77,5 +76,7 @@ def search(request, shop):
                 result.append(pair)
         else:
             error_message = '请输入收件人中国手机号码'
+    form1 = ExpressForm()
+    form2 = TrackForm()
     return render(request, 'etrack/index.html', {'shop':shop, 'shop_name':shop_name, 'form1': form1, 'form2': form2, 'has_result':has_result, 'result':result, 'error_message':error_message})
 
