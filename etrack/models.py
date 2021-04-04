@@ -116,8 +116,8 @@ class Express(models.Model):
         self.auto_recipient_name = self.recipient_name
         if self.track_number:
             self.packet_state = '已发送'
-        if self.recipient_photo:
-            self.recipient_photo = get_thumbnail(self.recipient_photo, '500x600', quality=99, format='JPEG')
+        # if self.recipient_photo:
+        #     self.recipient_photo = get_thumbnail(self.recipient_photo, '500x600', quality=99, format='JPEG')
         super(Express, self).save(*args, **kwargs)
 
 
