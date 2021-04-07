@@ -23,13 +23,13 @@
                         {% if form1.errors %}
                             {% for field in form1 %}
                                 {% for error in field.errors %}
-                                    <div class="alert alert-danger">
+                                    <div class="alert alert-danger font-ch">
                                         <strong>{{ field.label }}{{ error|escape }}</strong>
                                     </div>
                                 {% endfor %}
                             {% endfor %}
                             {% for error in form1.non_field_errors %}
-                                <div class="alert alert-danger">
+                                <div class="alert alert-danger font-ch">
                                     <strong>{{ error|escape }}</strong>
                                 </div>
                             {% endfor %}
@@ -40,7 +40,7 @@
                             {% if field.label == '收件人国家' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
+                                <span class="text-danger font-ch">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
                                     class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
                                     readonly="true">
@@ -48,7 +48,7 @@
                             {% elif field.label == '发件店铺' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
+                                <span class="text-danger font-ch">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
                                     class="form-control" name="{{ field.html_name }}" value="{{ shop_name }}店"
                                     readonly="true">
@@ -67,16 +67,16 @@
                             {% elif field.label == '收件人省' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
+                                <span class="text-danger font-ch">{{ field.errors }}</span>
                                 <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
-                                    class="form-control " onchange="showCity(this)">
+                                    class="form-control " onchange="showCity(this)" >
                                     <option value="">--请选择{{ field.label }}--</option>
                                 </select>
                             </div>
                             {% elif field.label == '收件人市' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
+                                <span class="text-danger font-ch">{{ field.errors }}</span>
                                 <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " onchange="showCountry(this)">
                                     <option value="">--请选择{{ field.label }}--</option>
@@ -85,24 +85,34 @@
                             {% elif field.label == '收件人区（县）' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
+                                <span class="text-danger font-ch">{{ field.errors }}</span>
                                 <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " >
                                     <option value="">--请选择{{ field.label }}--</option>
                                 </select>
                             </div>
                             {% elif field.label == '收件人身份证照片上传' %}
-                            <div class="form-group">
-                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
-                                <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
-                                    class="form-control-file" name="{{ field.html_name }}" value="{{ field.value }}"
-                                    placeholder="请输入{{ field.label }}">
+                            <div class="form-group mb-3">
+                                <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}(选填)</label>
+                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <div class="custom-file">
+                                  <input type="file" class="custom-file-input" id="{{ field.id_for_label }}" name="{{ field.html_name }}">
+                                  <label class="custom-file-label" for="{{ field.id_for_label }}"  data-browse="浏览">请上传收件人身份证照片(选填)</label>
+                                </div>
                             </div>
+                            <script>
+                                $('#{{ field.id_for_label }}').on('change',function(){
+                                    //get the file name
+                                    var fileName = $(this).val().replace('C:\\fakepath\\', " ");
+                                    //replace the "Choose a file" label
+                                    $(this).next('.custom-file-label').html(fileName);
+                                })
+                            </script>
+                            
                             {% else %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger">{{ field.errors }}</span>
+                                <span class="text-danger font-ch">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
                                     class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
                                     placeholder="请输入{{ field.label }}">
@@ -168,7 +178,7 @@
                                     placeholder="请输入{{ field.label }}">
                             </div>
                             {% endfor %}
-                            <button type="submit" class="btn btn-info">搜索单号</button>
+                            <button type="submit" class="btn btn-info font-ch">搜索单号</button>
                         </form>
                         {% if has_result %}
                         <div class="row my-3">
@@ -177,18 +187,18 @@
                                     <thead>
                                         <tr>
                                           <th scope="col">#</th>
-                                          <th scope="col">快递单号</th>
-                                          <th scope="col">发件登录时间</th>
-                                          <th scope="col">点击复制单号</th>
+                                          <th scope="col " class="font-ch">快递单号</th>
+                                          <th scope="col" class="font-ch">发件登录时间</th>
+                                          <th scope="col" class="font-ch">点击复制单号</th>
                                         </tr>
                                       </thead>
                                       <tbody>
                                     {% for r in result %}
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td id="{{ forloop.counter }}">{{ r.state }}</td>
+                                            <td id="express{{ forloop.counter }}">{{ r.state }}</td>
                                             <td>{{ r.datetime }}</td>
-                                            <td><button class="btn btn-sm btn-outline-secondary " onclick="copyText({{ forloop.counter }})" >复制</button></td>
+                                            <td><button class="btn btn-sm btn-outline-secondary font-ch" onclick="copyText({{ forloop.counter }})" >复制</button></td>
                                           </tr> 
                                     {% endfor %}
                                     </tbody>
@@ -200,7 +210,7 @@
                         <div class="font-ch mt-5 mb-3 text-primary">
                             查询步骤2：点击快递查询入口，输入快递单号进行查询
                         </div>
-                        <a href="https://www.kuaidi100.com/"><button class="btn btn-primary">快递查询入口</button></a>
+                        <a href="https://www.kuaidi100.com/"><button class="btn btn-primary font-ch">快递查询入口</button></a>
                     </div>
                 </div>
             </div>
@@ -209,7 +219,7 @@
 </div>
 <script type="text/javascript">
     function copyText(id) {
-        var myCode = document.getElementById(id).innerText;
+        var myCode = document.getElementById('express'+id).innerText;
         var fullLink = document.createElement('input');
         document.body.appendChild(fullLink);
         fullLink.value = myCode;
@@ -217,6 +227,12 @@
         document.execCommand("copy", false);
         fullLink.remove();
         alert("已复制: " + '"' + fullLink.value + '"');
+    }
+
+    function parseAddr(addr){
+        var reg = /.+?(特别行政区|省|市|自治区|自治州|县|区)/g;
+        console.log(addr.match(reg))
+        return addr.match(reg)
     }
 
     function parse(){
@@ -227,12 +243,23 @@
             var phone = items[1];
             var addr = items[2];
             var id = items[3];
+
             $('#id_recipient_name').val(name);
             $('#id_recipient_phone_num').val(phone);
             $('#id_recipient_addr').val(addr);
             $('#id_recipient_id').val(id);
+
+            var addrs = parseAddr(addr);
+            if(addrs.length == 3){
+                $('#id_recipient_province').val(addrs[0]);
+                showCity(document.getElementById('id_recipient_province'));
+                $('#id_recipient_city').val(addrs[1]);
+                showCountry(document.getElementById('id_recipient_city'));
+                $('#id_recipient_district').val(addrs[2]);
+            }
         } catch (error) {
-            alert('请按照规则填写智能填写信息!')
+            alert('请按照规则填写智能填写信息!');
+            console.log(error);
         }
     }
   </script>

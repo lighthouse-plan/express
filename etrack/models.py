@@ -61,15 +61,19 @@ def edit_photo_before_save(image):
     width, height = photo.size
 
     try: 
-        txt_img = Image.new("RGBA", photo.size, (255,255,255,0))
+        txt_img = Image.new("RGBA", (700,700), (255,255,255,0))
         draw = ImageDraw.Draw(txt_img)
-        text = "猎豹速递 猎豹速递 猎豹速递 猎豹速递 猎豹速递 猎豹速递"
-        font = ImageFont.truetype(settings.STATIC_URL+'font/Hiragino Sans GB.ttc', 80)
+        text = "仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用 \n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用"
+        font = ImageFont.truetype('STHeiti Medium.ttc', 50)
         textwidth, textheight = draw.textsize(text, font)
         x = 0
-        y = height//2 - textheight
-        draw.text((x, y), text=text, font=font, fill=(255, 255, 255, 128))
-        photo = Image.alpha_composite(photo, txt_img)
+        y = 0
+        draw.text((x, y), text=text, font=font, fill=(255, 255, 255, 150))
+        txt_img = txt_img.rotate(30).crop((10, 100, width + 10, height + 100))
+        try:
+            photo = Image.alpha_composite(photo, txt_img)
+        except:
+            pass
     except:
         pass
 

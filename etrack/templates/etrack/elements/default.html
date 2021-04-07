@@ -39,13 +39,18 @@
         <div style="margin-bottom: 200px;">
             {% block content %}{% endblock %}
         </div>
-        <div class="fixed-bottom  bg-info justify-content-center">
-            <div class="col-8 font-ch mt-3 h4">
-                扫码咨询
+        <div class="fixed-bottom  bg-info ">
+            <div class="row justify-content-center" >
+                <div class="col-3 font-ch mt-3 h4 text-center">
+                    扫码咨询
+                </div>
             </div>
-            <div class="col-7 mt-3 mb-4">
-                <img src="{% block qrimg %}{% endblock %}" style="width: 90px;" alt="liebaosudi">
+            <div class="row justify-content-center">
+                <div class="col-3 mt-3 mb-4 text-center">
+                    <img src="{% block qrimg %}{% endblock %}" style="width: 90px;" alt="liebaosudi">
+                </div>
             </div>
+            
         </div>
 
     </div>

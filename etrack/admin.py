@@ -3,8 +3,9 @@ from django.utils.translation import gettext_lazy as _
 from .models import Express
 import datetime
 from rangefilter.filter import DateRangeFilter
-import csv
 from django.http import HttpResponse
+from import_export.admin import ExportActionMixin
+from import_export import resources
 
 # Register your models here.
 class MyAdminSite(admin.AdminSite):
@@ -14,19 +15,22 @@ def upload_track_number(modeladmin, request, queryset):
     pass
 upload_track_number.short_description = '上传快递单号的Excel文件'
 
-class ExpressAdmin(admin.ModelAdmin):
-    def download_csv(self, request, queryset):
-        meta = self.model._meta
-        field_names = [field.name for field in meta.fields]
-        field_human_names = [field.verbose_name for field in meta.fields]
-        response = HttpResponse(content_type='text/csv')
+
+class ExpressResource(resources.ModelResource):
+    class Meta:
+        model = Express
+        
+
+
+
+class ExpressAdmin( admin.ModelAdmin):
+    def download_excel(self, request, queryset):
+        express_resource = ExpressResource()
+        dataset = express_resource.export()
+        response = HttpResponse(dataset.xls, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=liebaosudi_{}.csv'.format(datetime.datetime.now().strftime('%Y%m%d-%H-%M'))
-        writer = csv.writer(response)
-        writer.writerow(field_human_names)
-        for obj in queryset:
-            row = writer.writerow([getattr(obj, field) for field in field_names])
         return response
-    download_csv.short_description = '下载已选中的CSV文件'
+    download_excel.short_description = '下载已选中的excel文件'
 
     # disable delete action
     # def get_actions(self, request):
@@ -46,7 +50,8 @@ class ExpressAdmin(admin.ModelAdmin):
     list_filter = (('created_date',DateRangeFilter),'packet_state',)
     search_fields = ['sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop','recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'track_number','packet_state']
     list_per_page = 20
-    actions = [download_csv, upload_track_number]
+    actions = [download_excel,]
+    
 
 admin_site = MyAdminSite(name='myadmin')
 admin_site.register(Express, ExpressAdmin)
