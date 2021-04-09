@@ -73,9 +73,10 @@ def edit_photo_before_save(image):
         try:
             photo = Image.alpha_composite(photo, txt_img)
         except:
-            print("error here")
+            print("error here2")
             pass
     except:
+        print("error here1")
         pass
 
     thumb_io = BytesIO() # create a BytesIO object
