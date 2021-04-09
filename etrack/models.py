@@ -64,7 +64,11 @@ def edit_photo_before_save(image):
         txt_img = Image.new("RGBA", (700,700), (255,255,255,0))
         draw = ImageDraw.Draw(txt_img)
         text = "仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用 \n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用"
-        font = ImageFont.truetype('STHeiti Medium.ttc', 50)
+        try:
+            font = ImageFont.truetype('STHeiti Medium.ttc', 50)
+        except:
+            font = ImageFont.truetype('Arial.ttf', 50)
+            print("error here2")
         textwidth, textheight = draw.textsize(text, font)
         x = 0
         y = 0
@@ -73,11 +77,9 @@ def edit_photo_before_save(image):
         try:
             photo = Image.alpha_composite(photo, txt_img)
         except:
-            print("error here2")
-            pass
+            print("error here3")
     except:
         print("error here1")
-        pass
 
     thumb_io = BytesIO() # create a BytesIO object
     photo = photo.convert('RGB')
