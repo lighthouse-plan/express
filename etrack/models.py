@@ -65,7 +65,8 @@ def edit_photo_before_save(image):
         draw = ImageDraw.Draw(txt_img)
         text = "仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用 \n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用\n\n仅供清关使用 仅供清关使用 仅供清关使用 仅供清关使用"
         try:
-            font = ImageFont.truetype('STHeiti Medium.ttc', 50)
+            font = ImageFont.truetype(str(settings.STATIC_ROOT)+'/font/STHeiti Medium.ttc', 50)
+            
         except:
             print("error here2")
         textwidth, textheight = draw.textsize(text, font)
