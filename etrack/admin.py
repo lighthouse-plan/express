@@ -50,8 +50,8 @@ class ExpressAdmin(admin.ModelAdmin):
     actions = [download_excel,]
     def has_add_permission(self, request):
         return False
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
     def get_action_choices(self, request):
         choices = super(ExpressAdmin, self).get_action_choices(request)
         choices.pop(0)
