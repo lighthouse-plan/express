@@ -1,3 +1,19 @@
 .font-ch{
     font-family: 'Noto Sans SC', sans-serif;
 }
+
+input::-webkit-input-placeholder {
+    font-family: 'Noto Sans SC', sans-serif;
+}
+
+input:-ms-input-placeholder {
+        font-family: 'Noto Sans SC', sans-serif;
+}
+
+inputl:-moz-placeholder {
+font-family: 'Noto Sans SC', sans-serif;
+}
+
+input::-moz-placeholder {
+    font-family: 'Noto Sans SC', sans-serif;
+}

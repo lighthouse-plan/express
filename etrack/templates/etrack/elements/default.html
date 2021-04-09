@@ -36,26 +36,20 @@
                 {% block branch %}{% endblock %}
             </div>
         </div>
-        <div style="margin-bottom: 200px;">
+        <div style="margin-bottom: 100px;">
             {% block content %}{% endblock %}
         </div>
-        <div class="fixed-bottom  bg-info ">
-            <div class="row justify-content-center" >
-                <div class="col-3 font-ch mt-3 h4 text-center">
-                    扫码咨询
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-3 mt-3 mb-4 text-center">
-                    <img src="{% block qrimg %}{% endblock %}" style="width: 90px;" alt="liebaosudi">
-                </div>
-            </div>
-            
+        <div class="row justify-content-center " >
+            <div class="col-5 font-ch mt-3 h4 text-center">
+                扫码咨询
+            </div>   
         </div>
-
+        <div class="row justify-content-center ">
+            <div class="col-5 mt-3 mb-4 text-center">
+                <img src="{% block qrimg %}{% endblock %}" style="width: 120px;" alt="liebaosudi">
+            </div>
+        </div>
     </div>
-
-    
 </body>
 
 </html>
