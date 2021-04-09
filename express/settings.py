@@ -121,8 +121,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'etrack/static'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
 
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
