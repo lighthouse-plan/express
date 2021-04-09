@@ -48,8 +48,8 @@ class ExpressAdmin(admin.ModelAdmin):
     search_fields = ['sender_wechat_num','sender_name','sender_wechat_name','sender_mobile_num','shop','recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id', 'track_number','packet_state']
     list_per_page = 20
     actions = [download_excel,]
-    def has_add_permission(self, request):
-        return False
+    # def has_add_permission(self, request):
+    #     return False
     def has_delete_permission(self, request, obj=None):
         return False
     def get_action_choices(self, request):
