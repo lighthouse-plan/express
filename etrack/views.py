@@ -28,14 +28,13 @@ def index(request, shop):
             
         if form1.is_valid():
             form1.save()
-            email_from = settings.EMAIL_HOST_USER
-            send_mail(
-                'Subject here',
-                'Here is the message.',
-                email_from,
-                ['1173359575zmn@gmail.com'],
-                fail_silently=False,
-            )
+            # send_mail(
+            #     'Subject here',
+            #     'Here is the message.',
+            #     [''],
+            #     ['1173359575zmn@gmail.com'],
+            #     fail_silently=False,
+            # )
             ts = str(datetime.timestamp(datetime.now()))
             return HttpResponseRedirect(reverse('etrack:confirm', args=(shop, ts)))
     if 'form_data' in request.session:

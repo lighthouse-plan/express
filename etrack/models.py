@@ -73,6 +73,7 @@ def edit_photo_before_save(image):
         try:
             photo = Image.alpha_composite(photo, txt_img)
         except:
+            print("error here")
             pass
     except:
         pass
