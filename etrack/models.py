@@ -67,7 +67,6 @@ def edit_photo_before_save(image):
         try:
             font = ImageFont.truetype('STHeiti Medium.ttc', 50)
         except:
-            font = ImageFont.truetype('Arial.ttf', 50)
             print("error here2")
         textwidth, textheight = draw.textsize(text, font)
         x = 0
