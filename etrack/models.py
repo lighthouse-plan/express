@@ -1,4 +1,3 @@
-from django.db import models
 from django.core.validators import RegexValidator
 from PIL import Image
 from PIL import ImageDraw
