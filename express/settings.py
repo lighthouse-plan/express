@@ -25,7 +25,7 @@ SECRET_KEY = 'mwdpmxdv(2wi8%y7@v1cr7tbqbefs0c^+d2o(=#1qlm6lz^zl5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.176.13.233','127.0.0.1', '52.68.206.147']
+ALLOWED_HOSTS = ['liebaosudi.com','www.liebaosudi.com','18.176.13.233','127.0.0.1', '52.68.206.147']
 
 
 # Application definition
@@ -121,7 +121,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'etrack/static'
+STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
