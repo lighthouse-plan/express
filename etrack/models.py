@@ -91,6 +91,13 @@ class Express(models.Model):
         verbose_name_plural = "快递订单"
     # 代理人账号：ZZagent （固定）
     agent_account = models.CharField(max_length=200, default='ZZagent', verbose_name="代理人账号")
+    # 散客名称：(自动)
+    auto_recipient_name = models.CharField(max_length=200, verbose_name="散客名称", default='')
+    #发件人姓名：选填    
+    sender_name = models.CharField(max_length=200, null=True, verbose_name="发件人姓名（选填）", blank=True, default='')
+    #发件人手机号码：选填
+    mobile_regex = RegexValidator(regex=r'(^0[789]0[0-9]{4}[0-9]{4}$)|^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9]{3})[0-9]{8}$', message="请输入日本或中国手机号码(不加-)")
+    sender_mobile_num = models.CharField(validators=[mobile_regex], max_length=17, verbose_name="发件人手机号码", default='')
     # 发件人国家： (固定)
     sender_country = models.CharField(max_length=200, default='日本', verbose_name="发件人国家")
     # 发件人省： (固定)
@@ -101,29 +108,14 @@ class Express(models.Model):
     sender_district = models.CharField(max_length=200, default='幸町', verbose_name="发件人区（县）")
     # 发件人地址： (固定)
     sender_address = models.CharField(max_length=200, default='〒 332-0016埼玉県川口市幸町1-14-10', verbose_name="发件人地址")
-    # 散客名称：(自动)
-    auto_recipient_name = models.CharField(max_length=200, verbose_name="散客名称", default='')
 
-    #发件人姓名：选填    
-    sender_name = models.CharField(max_length=200, null=True, verbose_name="发件人姓名(选填)", blank=True, default='')
-    #发件登录日期时间 (自动)
-    created_date = models.DateTimeField(auto_now_add=True, verbose_name="发件登录时间")
-    #发件人微信名字：选填
-    sender_wechat_name = models.CharField(max_length=200, null=True, verbose_name="发件人微信名字(选填)", blank=True, default='')
-    #发件人微信号：（必须填写）
-    sender_wechat_num = models.CharField(max_length=200, verbose_name="发件人微信号", default='')
-    #发件人手机号码：选填
-    mobile_regex = RegexValidator(regex=r'(^0[789]0[0-9]{4}[0-9]{4}$)|^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9]{3})[0-9]{8}$', message="请输入日本或中国手机号码(不加-)")
-    sender_mobile_num = models.CharField(validators=[mobile_regex], max_length=17, verbose_name="发件人手机号码", default='')
-    #发件店铺
-    shop = models.CharField(max_length=200, null=True, verbose_name="发件店铺")
 
     
     # 收件人姓名：（必须填写）
     recipient_name = models.CharField(max_length=200, verbose_name="收件人姓名", default='')
-    # 收件人手机号码: （必须填写）
+    # 收件人手机: （必须填写）
     ch_phone_regex = RegexValidator(regex=r'^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9]{3})[0-9]{8}$', message="请输入中国手机号码")
-    recipient_phone_num = models.CharField(max_length=200, validators=[ch_phone_regex], verbose_name="收件人手机号码", default='')
+    recipient_phone_num = models.CharField(max_length=200, validators=[ch_phone_regex], verbose_name="收件人手机", default='')
     # 收件人国家：（中国） 固定
     recipient_country = models.CharField(max_length=200, default='中国', verbose_name="收件人国家")
     # 收件人省：（可选择）
@@ -137,6 +129,14 @@ class Express(models.Model):
     # 收件人身份证号码： 
     id_regex = RegexValidator(regex=r'^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$', message="请输入正确的身份证号")
     recipient_id = models.CharField(validators=[id_regex], max_length=200, verbose_name="收件人身份证号码", default='')
+    #发件登录日期时间 (自动)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="发件人登录时间")
+    #发件人微信名字：选填
+    sender_wechat_name = models.CharField(max_length=200, null=True, verbose_name="发件人微信名字（选填）", blank=True, default='')
+    #发件人微信号：（必须填写）
+    sender_wechat_num = models.CharField(max_length=200, verbose_name="发件人微信号", default='')
+    #发件店铺
+    shop = models.CharField(max_length=200, null=True, verbose_name="发件店铺")
     # 收件人身份证照片上传：建议上传 如遇海关抽查不能及时提交身份证照片出现任何问题我司概不负责
     recipient_photo = models.ImageField(verbose_name="收件人身份证照片上传", blank=True, upload_to=user_photo_path) 
 

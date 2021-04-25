@@ -15,13 +15,14 @@ class MyAdminSite(admin.AdminSite):
 class ExpressResource(resources.ModelResource):
     class Meta:
         model = Express
-        exclude = ('id', 'recipient_photo')
+        exclude = ('id',)
     def get_export_headers(self):
         headers = []
         for field in self.get_fields():
             model_fields = self.Meta.model._meta.get_fields()
             header = next((x.verbose_name for x in model_fields if x.name == field.column_name), field.column_name)
             headers.append(header)
+        print(headers)
         return headers
 
 def get_instance(self, row):

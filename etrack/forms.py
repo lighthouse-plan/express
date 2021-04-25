@@ -8,9 +8,10 @@ from django.forms import Field
 class ExpressForm(ModelForm):
     class Meta:
         model = Express
-        exclude = ['created_date', 'track_number', 'packet_state', 'agent_account', 'sender_country', 'sender_province', 'sender_city', 'sender_district', 'sender_address', 'auto_recipient_name']
+        fields = ['sender_name', 'sender_mobile_num', 'sender_wechat_name', 'sender_wechat_num', 'shop','recipient_name', 'recipient_phone_num', 'recipient_country', 'recipient_province', 'recipient_city', 'recipient_district', 'recipient_addr', 'recipient_id',  'recipient_photo']
     def __init__(self, *args, **kwargs):
         super(ExpressForm, self).__init__(*args, **kwargs)
+        print(self.fields.keys())
         for k, field in self.fields.items():
             if 'required' in field.error_messages:
                 field.error_messages['required'] = "这一栏是必填项。"
