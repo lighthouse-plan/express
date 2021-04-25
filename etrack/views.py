@@ -25,19 +25,15 @@ def index(request, shop):
     if request.method == 'POST':
         form1 = ExpressForm(request.POST, request.FILES)
         request.session['form_data'] = request.POST
-            
+        print(request.session['form_data'])
         if form1.is_valid():
             form1.save()
-            # send_mail(
-            #     'Subject here',
-            #     'Here is the message.',
-            #     [''],
-            #     ['1173359575zmn@gmail.com'],
-            #     fail_silently=False,
-            # )
             ts = str(datetime.timestamp(datetime.now()))
             return HttpResponseRedirect(reverse('etrack:confirm', args=(shop, ts)))
     if 'form_data' in request.session:
+        if 'csrfmiddlewaretoken' in request.session['form_data']:
+            request.session['form_data'].pop('csrfmiddlewaretoken')
+        print(request.session['form_data'])
         form1 = ExpressForm(request.session['form_data'])
     else: 
         form1 = ExpressForm()

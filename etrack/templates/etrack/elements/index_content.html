@@ -24,13 +24,13 @@
                         {% if form1.errors %}
                             {% for field in form1 %}
                                 {% for error in field.errors %}
-                                    <div class="alert alert-danger font-ch">
+                                    <div class="error-message alert alert-danger font-ch">
                                         <strong>{{ field.label }}{{ error|escape }}</strong>
                                     </div>
                                 {% endfor %}
                             {% endfor %}
                             {% for error in form1.non_field_errors %}
-                                <div class="alert alert-danger font-ch">
+                                <div class="error-message alert alert-danger font-ch">
                                     <strong>{{ error|escape }}</strong>
                                 </div>
                             {% endfor %}
@@ -41,7 +41,7 @@
                             {% if field.label == '收件人国家' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <span class="error-message text-danger font-ch">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
                                     class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
                                     readonly="true">
@@ -49,7 +49,7 @@
                             {% elif field.label == '发件店铺' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <span class="error-message text-danger font-ch">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
                                     class="form-control" name="{{ field.html_name }}" value="{{ shop_name }}店"
                                     readonly="true">
@@ -68,34 +68,47 @@
                             {% elif field.label == '收件人省' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <span class="error-message text-danger font-ch">{{ field.errors }}</span>
                                 <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " onchange="showCity(this)" >
-                                    <option value="">--请选择{{ field.label }}--</option>
+                                    {% if not field.value %}
+                                        <option value="">--请选择{{ field.label }}--</option>
+                                    {% else %}
+                                        <option value='{{ field.value }}'>{{ field.value }}</option>
+                                    {% endif %}
+                                    
                                 </select>
                             </div>
                             {% elif field.label == '收件人市' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <span class="error-message text-danger font-ch">{{ field.errors }}</span>
                                 <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " onchange="showCountry(this)">
-                                    <option value="">--请选择{{ field.label }}--</option>
+                                    {% if not field.value %}
+                                        <option value="">--请选择{{ field.label }}--</option>
+                                    {% else %}
+                                        <option value='{{ field.value }}'>{{ field.value }}</option>
+                                    {% endif %}
                                 </select>
                             </div>
                             {% elif field.label == '收件人区（县）' %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <span class="error-message text-danger font-ch">{{ field.errors }}</span>
                                 <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" 
                                     class="form-control " >
-                                    <option value="">--请选择{{ field.label }}--</option>
+                                    {% if not field.value %}
+                                        <option value="">--请选择{{ field.label }}--</option>
+                                    {% else %}
+                                        <option value='{{ field.value }}'>{{ field.value }}</option>
+                                    {% endif %}
                                 </select>
                             </div>
                             {% elif field.label == '收件人身份证照片上传' %}
                             <div class="form-group mb-3">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}(选填)</label>
-                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <span class="error-message text-danger font-ch">{{ field.errors }}</span>
                                 <div class="custom-file">
                                   <input type="file" class="custom-file-input" id="{{ field.id_for_label }}" name="{{ field.html_name }}">
                                   <label class="custom-file-label" for="{{ field.id_for_label }}"  data-browse="浏览">请上传收件人身份证照片(选填)</label>
@@ -113,7 +126,7 @@
                             {% else %}
                             <div class="form-group">
                                 <label class="font-ch" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                <span class="text-danger font-ch">{{ field.errors }}</span>
+                                <span class="error-message text-danger font-ch">{{ field.errors }}</span>
                                 <input id="{{ field.id_for_label }}" type="{{ field.field.widget.input_type }}"
                                     class="form-control" name="{{ field.html_name }}" value="{{ field.value }}"
                                     placeholder="请输入{{ field.label }}">
@@ -148,8 +161,14 @@
                     document.getElementById('submitBtn').style.visibility = 'visible';
                     document.getElementById('backBtn').style.visibility = 'visible';
                     document.getElementById('collapseOne').classList.add('show');
+                    var errorMsgs = Array.prototype.slice.call(document.getElementsByClassName('error-message'));
+                    errorMsgs.forEach(e=>e.remove());
+                    
                     $('#formOne  input').attr('readonly','readonly');
                     $('#formOne  select').attr('readonly','readonly');
+                    $('#formOne  textarea').attr('readonly','readonly');
+                    document.body.scrollTop = 0; // For Safari
+                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
                 }
                 function back(){
                     document.getElementById('ensureBtn').style.visibility = 'visible';
@@ -158,8 +177,13 @@
                     document.getElementById('collapseOne').classList.add('show');
                     $('#formOne input').not('#id_recipient_country').not('#id_shop').removeAttr('readonly');
                     $('#formOne select').removeAttr('readonly');
+                    document.body.scrollTop = 0; // For Safari
+                    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
                 }
             </script>
+
+
+            <!-- 我要查件 -->
             <div class="card">
                 <div class="card-header" id="headingTwo">
                     <h2 class="mb-0">
@@ -200,7 +224,6 @@
                                         <tr>
                                           <th scope="col">#</th>
                                           <th scope="col " class="font-ch">快递单号</th>
-                                          <th scope="col" class="font-ch">发件登录时间</th>
                                           <th scope="col" class="font-ch">点击复制单号</th>
                                         </tr>
                                       </thead>
@@ -208,8 +231,7 @@
                                     {% for r in result %}
                                         <tr>
                                             <th scope="row">{{ forloop.counter }}</th>
-                                            <td id="express{{ forloop.counter }}">{{ r.state }}</td>
-                                            <td>{{ r.datetime }}</td>
+                                            <td id="express{{ forloop.counter }}" class="font-ch">{{ r.state }}</td>
                                             <td><button class="btn btn-sm btn-outline-secondary font-ch" onclick="copyText({{ forloop.counter }})" >复制</button></td>
                                           </tr> 
                                     {% endfor %}
