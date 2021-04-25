@@ -32,8 +32,16 @@ def index(request, shop):
             return HttpResponseRedirect(reverse('etrack:confirm', args=(shop, ts)))
     if 'form_data' in request.session:
         if 'csrfmiddlewaretoken' in request.session['form_data']:
-            request.session['form_data'].pop('csrfmiddlewaretoken')
-        print(request.session['form_data'])
+            print(str(type(request.session['form_data'])))
+            if str(type(request.session['form_data'])) == "<class 'django.http.request.QueryDict'>":
+                _mutable = request.session['form_data']._mutable
+                # set to mutable
+                request.session['form_data']._mutable = True
+                request.session['form_data'].pop('csrfmiddlewaretoken')
+                # set mutable flag back
+                request.session['form_data']._mutable = _mutable
+            else:
+                request.session['form_data'].pop('csrfmiddlewaretoken')
         form1 = ExpressForm(request.session['form_data'])
     else: 
         form1 = ExpressForm()
