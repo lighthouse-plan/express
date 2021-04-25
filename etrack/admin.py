@@ -89,8 +89,8 @@ class ExpressAdmin(ImportMixin, admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
     
     # remove '------' from actions select tag
     def get_action_choices(self, request):
