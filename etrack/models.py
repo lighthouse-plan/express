@@ -131,8 +131,8 @@ class Express(models.Model):
     recipient_id = models.CharField(validators=[id_regex], max_length=200, verbose_name="收件人身份证号码", default='')
     #发件登录日期时间 (自动)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="发件人登录时间")
-    #发件人微信名字：选填
-    sender_wechat_name = models.CharField(max_length=200, null=True, verbose_name="发件人微信名字（选填）", blank=True, default='')
+    #发件人微信名字：（必须填写）
+    sender_wechat_name = models.CharField(max_length=200, verbose_name="发件人微信名字", default='')
     #发件人微信号：（必须填写）
     sender_wechat_num = models.CharField(max_length=200, verbose_name="发件人微信号", default='')
     #发件店铺
@@ -147,8 +147,8 @@ class Express(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.sender_name:
-            self.sender_name = '申通国际日本站'
-        self.auto_recipient_name = self.recipient_name
+            self.sender_name = self.sender_wechat_name
+        self.auto_recipient_name = self.shop[:-1]
         if self.track_number:
             self.packet_state = '已发送'
         if self.recipient_photo:

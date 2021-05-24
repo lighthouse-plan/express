@@ -16,13 +16,37 @@ class ExpressResource(resources.ModelResource):
     class Meta:
         model = Express
         exclude = ('id',)
+        export_order = ()
+        queryset = []
+        for field in Express._meta.fields[1:]:
+            if field.name == 'sender_name':
+                export_order += ('sender_wechat_name',)
+            else:
+                export_order += (field.name,)
+
+    def set_queryset(self, queryset):
+        self._meta.queryset = queryset
+    
+    def get_queryset(self):
+        
+        return self._meta.queryset
+
+    def get_export_order(self):
+        
+        return self._meta.export_order
+
     def get_export_headers(self):
         headers = []
         for field in self.get_fields():
             model_fields = self.Meta.model._meta.get_fields()
+            
             header = next((x.verbose_name for x in model_fields if x.name == field.column_name), field.column_name)
+            
             headers.append(header)
-        print(headers)
+        for i, header in enumerate(headers):
+            if header == "发件人微信名字":
+                headers[i] = "发件人姓名"
+                break
         return headers
 
 def get_instance(self, row):
@@ -84,6 +108,7 @@ class ExpressAdmin(ImportMixin, admin.ModelAdmin):
 
     def download_excel(self, request, queryset):
         express_resource = ExpressResource()
+        express_resource.set_queryset(queryset)
         dataset = express_resource.export()
         response = HttpResponse(dataset.xlsx, content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = 'attachment; filename=liebaosudi_{}.xlsx'.format(datetime.datetime.now().strftime('%Y%m%d-%H-%M'))
